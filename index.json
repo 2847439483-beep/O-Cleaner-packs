@@ -1,0 +1,11 @@
+{
+  "_comment": "资源包清单。界面上的「从 GitHub 检查更新」按这个列表逐个下载包并导入到 config/packs-user/。",
+  "version": 1,
+  "updated": "2026-10-12",
+  "packs": [
+    "windows-system.json",
+    "apps-common.json",
+    "games-platform.json",
+    "games-titles.json"
+  ]
+}
