@@ -1,0 +1,597 @@
+{
+  "id": "apps-common",
+  "name": "常见软件缓存释义",
+  "version": "1.0.0",
+  "type": "apps",
+  "description": "开发工具、通讯软件、创作工具、显卡驱动等常见软件的缓存与数据目录。区分「缓存可清」与「数据不能碰」，避免把聊天记录、模型文件、工程素材当成垃圾。",
+  "author": "O-Cleaner",
+  "license": "MIT",
+  "updated": "2026-10-12",
+  "entries": [
+    {
+      "id": "pip-cache",
+      "title": "pip 下载缓存",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\pip\\cache"
+        ]
+      },
+      "what": "pip 下载过的 wheel 与源码包缓存，装过的库下次可以直接复用。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后重新安装同样的库需要重新联网下载。",
+      "keep": "网络差、或经常重装环境时可以保留。"
+    },
+    {
+      "id": "uv-cache",
+      "title": "uv 缓存",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\uv\\cache"
+        ]
+      },
+      "what": "uv 下载与构建过的包缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后首次装包会变慢。",
+      "keep": "不需要保留，需要时用 uv cache clean 更规范。"
+    },
+    {
+      "id": "npm-cache",
+      "title": "npm 缓存",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\npm-cache",
+          "\\appdata\\local\\npm-cache"
+        ]
+      },
+      "what": "npm 下载过的包缓存，体积经常到几个 GB。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后重新安装依赖需要重新联网下载。",
+      "keep": "经常在离线环境装依赖时保留。"
+    },
+    {
+      "id": "yarn-pnpm-store",
+      "title": "yarn / pnpm 缓存与存储",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\yarn\\cache",
+          "\\pnpm-store",
+          "\\.pnpm-store"
+        ]
+      },
+      "what": "yarn 与 pnpm 的全局包存储，pnpm 还用它做硬链接以省空间。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后所有项目首次安装依赖都会变慢；pnpm 的硬链接会失效并重新拉取。",
+      "keep": "pnpm 的存储是它省空间的机制，建议保留。"
+    },
+    {
+      "id": "gradle-caches",
+      "title": "Gradle 缓存",
+      "category": "包管理器",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\.gradle\\caches",
+          "\\.gradle\\wrapper"
+        ]
+      },
+      "what": "Gradle 下载的依赖与构建缓存。",
+      "rebuild": "会重建，但需要重新联网下载依赖。",
+      "effect": "清理后第一次构建明显变慢；wrapper 里可能存着指定版本的 Gradle 发行包。",
+      "keep": "经常构建 Android / Java 项目时保留更省时间。"
+    },
+    {
+      "id": "maven-repo",
+      "title": "Maven 本地仓库",
+      "category": "包管理器",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\.m2\\repository"
+        ]
+      },
+      "what": "Maven 下载到本地的 jar 仓库。",
+      "rebuild": "会重建。",
+      "effect": "清理后构建需要重新下载依赖；离线构建会直接失败。",
+      "keep": "需要在无网环境构建时保留。"
+    },
+    {
+      "id": "nuget-packages",
+      "title": "NuGet 包缓存",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\.nuget\\packages"
+        ]
+      },
+      "what": ".NET 项目的 NuGet 包缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后还原依赖需要重新下载。",
+      "keep": "经常构建 .NET 项目时保留。"
+    },
+    {
+      "id": "go-modcache",
+      "title": "Go 模块与构建缓存",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\go\\pkg\\mod",
+          "\\go-build",
+          "\\.cache\\go-build"
+        ]
+      },
+      "what": "Go module 下载缓存与编译中间产物，构建缓存可能到几十 GB。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后首次编译全量重来，耗时明显增加。",
+      "keep": "大项目频繁编译时保留更省时间；用 go clean -cache 更规范。"
+    },
+    {
+      "id": "cargo-registry",
+      "title": "Cargo 缓存",
+      "category": "包管理器",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\.cargo\\registry",
+          "\\.cargo\\git"
+        ]
+      },
+      "what": "Rust 的 crate 下载缓存与 git 依赖副本。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后构建需要重新下载依赖。",
+      "keep": "经常构建 Rust 项目时保留。"
+    },
+    {
+      "id": "hf-cache",
+      "title": "Hugging Face 模型缓存",
+      "category": "AI 模型",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\.cache\\huggingface",
+          "\\huggingface\\hub"
+        ]
+      },
+      "what": "从 Hugging Face 下载的模型权重，单个模型常常几十 GB。",
+      "rebuild": "会重新下载，但代价很高。",
+      "effect": "删除后需要重新下载；部分模型可能已被作者下架，未必能再取回。",
+      "keep": "建议保留 —— 这是本工具明确划出的「不会触碰」范围。"
+    },
+    {
+      "id": "ollama-models",
+      "title": "Ollama 模型",
+      "category": "AI 模型",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\.ollama\\models"
+        ]
+      },
+      "what": "Ollama 下载的大模型权重。",
+      "rebuild": "可以用 ollama pull 重新拉取。",
+      "effect": "删除后必须重新下载，且需要重新占用同样的空间。",
+      "keep": "保留。要删请用 ollama rm <模型名>。"
+    },
+    {
+      "id": "torch-hub",
+      "title": "PyTorch 模型缓存",
+      "category": "AI 模型",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\.cache\\torch\\hub",
+          "\\.cache\\torch\\checkpoints"
+        ]
+      },
+      "what": "PyTorch 预训练模型与检查点缓存。",
+      "rebuild": "会重新下载。",
+      "effect": "删除后需要重新下载，可能几十 GB。",
+      "keep": "保留更省事。"
+    },
+    {
+      "id": "wechat-files",
+      "title": "微信聊天文件",
+      "category": "聊天软件",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\wechat files",
+          "\\xwechat_files",
+          "\\wechatfiles"
+        ]
+      },
+      "what": "微信保存的聊天图片、视频、文件与聊天记录数据库。",
+      "rebuild": "不会自动重建，服务器上通常只保留一段时间。",
+      "effect": "删除后本地聊天记录与接收过的文件都将无法找回，已经过期的内容服务器也不再提供。",
+      "keep": "一律保留。要瘦身请用微信自带的「存储空间管理」。本工具不会清理它。"
+    },
+    {
+      "id": "wechat-cache",
+      "title": "微信缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\wechat files\\all users",
+          "\\xwechat_files\\all_users"
+        ]
+      },
+      "what": "微信为多账号共享的缓存数据（表情、缩略图等）。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后表情与缩略图需要重新加载。",
+      "keep": "不需要保留。"
+    },
+    {
+      "id": "qq-files",
+      "title": "QQ 文件与聊天数据",
+      "category": "聊天软件",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\tencent files",
+          "\\documents\\tencent files"
+        ]
+      },
+      "what": "QQ 接收的文件、聊天记录与图片。",
+      "rebuild": "不会自动重建。",
+      "effect": "删除后本地记录与文件无法找回。",
+      "keep": "保留。请用 QQ 自带的清理功能。"
+    },
+    {
+      "id": "telegram-tdata",
+      "title": "Telegram 数据目录（tdata）",
+      "category": "聊天软件",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\telegram desktop\\tdata"
+        ]
+      },
+      "what": "Telegram 的登录态、会话密钥与本地缓存。",
+      "rebuild": "不会自动重建。",
+      "effect": "删除后需要重新登录，且必须用手机接收验证码。",
+      "keep": "保留。要清缓存请在 Telegram 内「设置 → 高级 → 存储用量」里操作。"
+    },
+    {
+      "id": "wecom-cache",
+      "title": "企业微信 / 钉钉缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\wxwork",
+          "\\dingtalk\\media",
+          "\\dingtalk\\cache"
+        ]
+      },
+      "what": "办公协作软件下载的图片、表情与临时文件。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后历史图片与文件的本地副本会消失，需要时得重新下载。",
+      "keep": "需要回看历史文件时先确认已另存。"
+    },
+    {
+      "id": "discord-cache",
+      "title": "Discord 缓存",
+      "category": "临时文件",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\discord\\cache",
+          "\\discord\\code cache",
+          "\\discord\\gpucache"
+        ]
+      },
+      "what": "Discord 内嵌浏览器、表情与图片的缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后首次打开频道会重新加载图片。",
+      "keep": "不需要保留。"
+    },
+    {
+      "id": "slack-teams-zoom-cache",
+      "title": "Slack / Teams / Zoom 缓存",
+      "category": "临时文件",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\slack\\cache",
+          "\\slack\\code cache",
+          "\\microsoft\\teams",
+          "\\zoom\\data",
+          "\\zoom\\logs"
+        ]
+      },
+      "what": "这几个会议与协作软件的日志、缓存与临时文件。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后首次启动与加载历史消息会稍慢。",
+      "keep": "不需要保留。"
+    },
+    {
+      "id": "nvidia-shadercache",
+      "title": "NVIDIA 着色器与驱动缓存",
+      "category": "显卡缓存",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\nvidia\\dxcache",
+          "\\nvidia\\glcache",
+          "\\programdata\\nvidia corporation\\nvcache"
+        ]
+      },
+      "what": "显卡驱动为游戏与图形软件编译的着色器缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后游戏与图形软件前几次运行可能更卡。",
+      "keep": "不需要保留。这是常见的大体积缓存之一。"
+    },
+    {
+      "id": "nvidia-installer",
+      "title": "NVIDIA 驱动安装残留",
+      "category": "临时文件",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\nvidia corporation\\installer2",
+          "\\nvidia\\downloader"
+        ]
+      },
+      "what": "驱动安装程序解包后留下的临时文件与旧版安装包。",
+      "rebuild": "不适用：属于一次性产物。",
+      "effect": "清理后不影响已安装的驱动；要回退驱动版本时需要重新下载旧版。",
+      "keep": "不需要保留。"
+    },
+    {
+      "id": "amd-intel-shadercache",
+      "title": "AMD / Intel 着色器缓存",
+      "category": "显卡缓存",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\amd\\dxcache",
+          "\\amd\\glcache",
+          "\\amd\\dwn",
+          "\\intel\\shadercache"
+        ]
+      },
+      "what": "A 卡与 I 卡驱动生成的着色器缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后前几次运行图形程序会稍卡。",
+      "keep": "不需要保留。"
+    },
+    {
+      "id": "vscode-cache",
+      "title": "VS Code 缓存与日志",
+      "category": "临时文件",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\code\\cacheddata",
+          "\\code\\cached extensions",
+          "\\code\\logs",
+          "\\code\\gpucache"
+        ]
+      },
+      "what": "VS Code 的扩展缓存、日志和界面缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后首次打开会重建缓存，稍慢；扩展本身不受影响。",
+      "keep": "不需要保留。注意不要删同级的 User 目录（那里是设置与快捷键）。"
+    },
+    {
+      "id": "jetbrains-cache",
+      "title": "JetBrains IDE 缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\jetbrains\\",
+          "\\google\\androidstudio"
+        ]
+      },
+      "what": "IDEA / PyCharm 等 IDE 的索引缓存、日志与插件临时文件。",
+      "rebuild": "会重建，但重建期间需要重新索引整个项目。",
+      "effect": "清理后首次打开项目会长时间「正在索引」，大项目可能十几分钟。",
+      "keep": "项目很大时保留更省时间，或改用 IDE 内的「Invalidate Caches」。"
+    },
+    {
+      "id": "adobe-media-cache",
+      "title": "Adobe 媒体缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\adobe\\common\\media cache",
+          "\\adobe\\common\\media cache files",
+          "\\adobe\\common\\peak files"
+        ]
+      },
+      "what": "Premiere / After Effects 生成的预览与音频波形缓存，体积经常几十 GB。",
+      "rebuild": "会重建，但需要重新生成预览。",
+      "effect": "清理后打开工程时需要重新生成预览与波形，编辑器会卡一段时间。",
+      "keep": "正在做的工程建议保留，否则每次打开都要等。"
+    },
+    {
+      "id": "davinci-cache",
+      "title": "DaVinci Resolve 缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\blackmagic design\\davinci resolve"
+        ]
+      },
+      "what": "剪辑软件生成的优化媒体与渲染缓存。",
+      "rebuild": "会重建。",
+      "effect": "清理后回放与渲染会重新生成缓存，期间明显变慢。",
+      "keep": "正在做的工程保留更好。"
+    },
+    {
+      "id": "blender-cache",
+      "title": "Blender 临时与缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\blender foundation\\blender\\",
+          "\\appdata\\local\\temp\\blender"
+        ]
+      },
+      "what": "Blender 的临时渲染文件、自动保存与拼贴缓存。",
+      "rebuild": "会重建。",
+      "effect": "清理会一并清掉崩溃恢复用的自动保存文件。",
+      "keep": "正在渲染或做项目时保留，自动保存有时能救回未保存的工作。"
+    },
+    {
+      "id": "office-filecache",
+      "title": "Office 文档缓存",
+      "category": "临时文件",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\microsoft office\\officefilecache",
+          "\\microsoft\\office\\16.0\\officefilecache"
+        ]
+      },
+      "what": "Office 保存文档时的本地副本与上传缓存，配合 OneDrive 使用时才明显。",
+      "rebuild": "会自动重建。",
+      "effect": "如果本地副本里还有尚未同步到云端的改动，清理可能导致这些改动丢失。",
+      "keep": "确认文档都已同步完成后再清。"
+    },
+    {
+      "id": "onedrive",
+      "title": "OneDrive 本地副本",
+      "category": "自定义目录",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\onedrive"
+        ]
+      },
+      "what": "云端文件的本地副本与按需下载的占位文件。",
+      "rebuild": "会按需重新下载。",
+      "effect": "直接删除本地副本不会删云端文件，但会打乱同步状态，可能触发全量重新同步。",
+      "keep": "保留。要释放空间请用文件右键的「释放空间」。"
+    },
+    {
+      "id": "baidu-netdisk",
+      "title": "百度网盘缓存",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\baidunetdisk",
+          "\\baidu\\baidunetdisk"
+        ]
+      },
+      "what": "网盘客户端的下载缓存、缩略图与日志。",
+      "rebuild": "会重建。",
+      "effect": "清理会一并清掉下载中的分块文件，未完成的下载需要重来。",
+      "keep": "有下载任务正在进行时保留。"
+    },
+    {
+      "id": "thunder-idm",
+      "title": "下载工具临时文件",
+      "category": "临时文件",
+      "risk": "中",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "\\thunder network",
+          "\\xunlei",
+          "\\internet download manager\\dwnlData"
+        ]
+      },
+      "what": "下载工具的分块临时文件与元数据。",
+      "rebuild": "不适用。",
+      "effect": "清理未完成任务的临时文件会导致该任务需要重新下载。",
+      "keep": "有未完成任务时保留。"
+    },
+    {
+      "id": "docker-desktop",
+      "title": "Docker Desktop 数据",
+      "category": "自定义目录",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\docker\\wsl",
+          "\\docker desktop",
+          "\\.docker\\desktop"
+        ]
+      },
+      "what": "Docker 的镜像、容器与卷数据。",
+      "rebuild": "不会自动重建。",
+      "effect": "删除会丢失所有本地镜像与容器数据，包括未导出的数据库内容。",
+      "keep": "保留。要瘦身请用 docker system prune。"
+    },
+    {
+      "id": "wsl-vhdx",
+      "title": "WSL 发行版磁盘镜像",
+      "category": "自定义目录",
+      "risk": "高",
+      "cleanable": false,
+      "match": {
+        "any": [
+          "\\wsl\\",
+          "ext4.vhdx"
+        ]
+      },
+      "what": "每个 WSL 发行版对应的虚拟磁盘文件，装得越多越大。",
+      "rebuild": "不会自动重建。",
+      "effect": "删除等于删掉整个 Linux 环境里的所有文件与配置。",
+      "keep": "保留。要回收空间可先 docker system prune 再压缩 vhdx。"
+    },
+    {
+      "id": "windows-store-cache",
+      "title": "Microsoft Store 缓存",
+      "category": "临时文件",
+      "risk": "低",
+      "cleanable": true,
+      "match": {
+        "any": [
+          "microsoft.windowsstore"
+        ]
+      },
+      "what": "应用商店的下载缓存与界面缓存。",
+      "rebuild": "会自动重建。",
+      "effect": "清理后用 wsreset 重建即可，否则商店页面可能加载异常。",
+      "keep": "不需要保留。"
+    }
+  ]
+}
